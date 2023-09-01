@@ -1,89 +1,89 @@
-Name	Description	Type	Media
-F01-1	Rhizosphere1	CI	CI
-F01-2	Rhizosphere1	CI	CI
-F01-3	Rhizosphere1	CI	CI
-F01-4	Rhizosphere1	CI	CI
-F01-5	Rhizosphere1	CI	CI
-F02-1	Rhizosphere2	CI	CI
-F02-2	Rhizosphere2	CI	CI
-F02-3	Rhizosphere2	CI	CI
-F02-4	Rhizosphere2	CI	CI
-F02-5	Rhizosphere2	CI	CI
-F03-1	Rhizosphere3	CI	CI
-F03-2	Rhizosphere3	CI	CI
-F03-3	Rhizosphere3	CI	CI
-F03-4	Rhizosphere3	CI	CI
-F03-5	Rhizosphere3	CI	CI
-F04-1	Rhizosphere4	CI	CI
-F04-2	Rhizosphere4	CI	CI
-F04-3	Rhizosphere4	CI	CI
-F04-4	Rhizosphere4	CI	CI
-F04-5	Rhizosphere4	CI	CI
-F05-1	Rhizosphere5	CI	CI
-F05-2	Rhizosphere5	CI	CI
-F05-3	Rhizosphere5	CI	CI
-F05-4	Rhizosphere5	CI	CI
-F05-5	Rhizosphere5	CI	CI
-F06-1	Rhizosphere6	CI	CI
-F06-2	Rhizosphere6	CI	CI
-F06-3	Rhizosphere6	CI	CI
-F06-4	Rhizosphere6	CI	CI
-F06-5	Rhizosphere6	CI	CI
-F07-1	Rhizosphere7	CI	CI
-F07-2	Rhizosphere7	CI	CI
-F07-3	Rhizosphere7	CI	CI
-F07-4	Rhizosphere7	CI	CI
-F07-5	Rhizosphere7	CI	CI
-F08-1	Rhizosphere8	CI	CI
-F08-2	Rhizosphere8	CI	CI
-F08-3	Rhizosphere8	CI	CI
-F08-4	Rhizosphere8	CI	CI
-F08-5	Rhizosphere8	CI	CI
-F09-1	Rhizosphere9	CI	CI
-F09-2	Rhizosphere9	CI	CI
-F09-3	Rhizosphere9	CI	CI
-F09-4	Rhizosphere9	CI	CI
-F09-5	Rhizosphere9	CI	CI
-F10-1	Rhizosphere10	CI	CI
-F10-2	Rhizosphere10	CI	CI
-F10-3	Rhizosphere10	CI	CI
-F10-4	Rhizosphere10	CI	CI
-F10-5	Rhizosphere10	CI	CI
-F11-1	Rhizosphere11	CI	CI
-F11-2	Rhizosphere11	CI	CI
-F11-3	Rhizosphere11	CI	CI
-F11-4	Rhizosphere11	CI	CI
-F11-5	Rhizosphere11	CI	CI
-F12-1	Rhizosphere12	CI	CI
-F12-2	Rhizosphere12	CI	CI
-F12-3	Rhizosphere12	CI	CI
-F12-4	Rhizosphere12	CI	CI
-F12-5	Rhizosphere12	CI	CI
-F13-1	Rhizosphere13	CI	CI
-F13-2	Rhizosphere13	CI	CI
-F13-3	Rhizosphere13	CI	CI
-F13-4	Rhizosphere13	CI	CI
-F13-5	Rhizosphere13	CI	CI
-F14-1	Rhizosphere14	CI	CI
-F14-2	Rhizosphere14	CI	CI
-F14-3	Rhizosphere14	CI	CI
-F14-4	Rhizosphere14	CI	CI
-F14-5	Rhizosphere14	CI	CI
-F15-1	Rhizosphere15	CI	CI
-F15-2	Rhizosphere15	CI	CI
-F15-3	Rhizosphere15	CI	CI
-F15-4	Rhizosphere15	CI	CI
-F15-5	Rhizosphere15	CI	CI
-F01	Rhizosphere1	CD	mix
-F02	Rhizosphere2	CD	mix
-F03	Rhizosphere3	CD	mix
-F04	Rhizosphere4	CD	mix
-F05	Rhizosphere5	CD	mix
-F07	Rhizosphere7	CD	mix
-F08	Rhizosphere8	CD	mix
-F10	Rhizosphere10	CD	mix
-F11	Rhizosphere11	CD	mix
-F12	Rhizosphere12	CD	mix
-F13	Rhizosphere13	CD	mix
-F14	Rhizosphere14	CD	mix
-F15	Rhizosphere15	CD	mix
+Name	Description	Type	Media	Farm
+F01-1	Rhizosphere1	CI	CI	F01
+F01-2	Rhizosphere1	CI	CI	F01
+F01-3	Rhizosphere1	CI	CI	F01
+F01-4	Rhizosphere1	CI	CI	F01
+F01-5	Rhizosphere1	CI	CI	F01
+F02-1	Rhizosphere2	CI	CI	F02
+F02-2	Rhizosphere2	CI	CI	F02
+F02-3	Rhizosphere2	CI	CI	F02
+F02-4	Rhizosphere2	CI	CI	F02
+F02-5	Rhizosphere2	CI	CI	F02
+F03-1	Rhizosphere3	CI	CI	F03
+F03-2	Rhizosphere3	CI	CI	F03
+F03-3	Rhizosphere3	CI	CI	F03
+F03-4	Rhizosphere3	CI	CI	F03
+F03-5	Rhizosphere3	CI	CI	F03
+F04-1	Rhizosphere4	CI	CI	F04
+F04-2	Rhizosphere4	CI	CI	F04
+F04-3	Rhizosphere4	CI	CI	F04
+F04-4	Rhizosphere4	CI	CI	F04
+F04-5	Rhizosphere4	CI	CI	F04
+F05-1	Rhizosphere5	CI	CI	F05
+F05-2	Rhizosphere5	CI	CI	F05
+F05-3	Rhizosphere5	CI	CI	F05
+F05-4	Rhizosphere5	CI	CI	F05
+F05-5	Rhizosphere5	CI	CI	F05
+F06-1	Rhizosphere6	CI	CI	F06
+F06-2	Rhizosphere6	CI	CI	F06
+F06-3	Rhizosphere6	CI	CI	F06
+F06-4	Rhizosphere6	CI	CI	F06
+F06-5	Rhizosphere6	CI	CI	F06
+F07-1	Rhizosphere7	CI	CI	F07
+F07-2	Rhizosphere7	CI	CI	F07
+F07-3	Rhizosphere7	CI	CI	F07
+F07-4	Rhizosphere7	CI	CI	F07
+F07-5	Rhizosphere7	CI	CI	F07
+F08-1	Rhizosphere8	CI	CI	F08
+F08-2	Rhizosphere8	CI	CI	F08
+F08-3	Rhizosphere8	CI	CI	F08
+F08-4	Rhizosphere8	CI	CI	F08
+F08-5	Rhizosphere8	CI	CI	F08
+F09-1	Rhizosphere9	CI	CI	F09
+F09-2	Rhizosphere9	CI	CI	F09
+F09-3	Rhizosphere9	CI	CI	F09
+F09-4	Rhizosphere9	CI	CI	F09
+F09-5	Rhizosphere9	CI	CI	F09
+F10-1	Rhizosphere10	CI	CI	F10
+F10-2	Rhizosphere10	CI	CI	F10
+F10-3	Rhizosphere10	CI	CI	F10
+F10-4	Rhizosphere10	CI	CI	F10
+F10-5	Rhizosphere10	CI	CI	F10
+F11-1	Rhizosphere11	CI	CI	F11
+F11-2	Rhizosphere11	CI	CI	F11
+F11-3	Rhizosphere11	CI	CI	F11
+F11-4	Rhizosphere11	CI	CI	F11
+F11-5	Rhizosphere11	CI	CI	F11
+F12-1	Rhizosphere12	CI	CI	F12
+F12-2	Rhizosphere12	CI	CI	F12
+F12-3	Rhizosphere12	CI	CI	F12
+F12-4	Rhizosphere12	CI	CI	F12
+F12-5	Rhizosphere12	CI	CI	F12
+F13-1	Rhizosphere13	CI	CI	F13
+F13-2	Rhizosphere13	CI	CI	F13
+F13-3	Rhizosphere13	CI	CI	F13
+F13-4	Rhizosphere13	CI	CI	F13
+F13-5	Rhizosphere13	CI	CI	F13
+F14-1	Rhizosphere14	CI	CI	F14
+F14-2	Rhizosphere14	CI	CI	F14
+F14-3	Rhizosphere14	CI	CI	F14
+F14-4	Rhizosphere14	CI	CI	F14
+F14-5	Rhizosphere14	CI	CI	F14
+F15-1	Rhizosphere15	CI	CI	F15
+F15-2	Rhizosphere15	CI	CI	F15
+F15-3	Rhizosphere15	CI	CI	F15
+F15-4	Rhizosphere15	CI	CI	F15
+F15-5	Rhizosphere15	CI	CI	F15
+F01	Rhizosphere1	CD	mix	F01
+F02	Rhizosphere2	CD	mix	F02
+F03	Rhizosphere3	CD	mix	F03
+F04	Rhizosphere4	CD	mix	F04
+F05	Rhizosphere5	CD	mix	F05
+F07	Rhizosphere7	CD	mix	F07
+F08	Rhizosphere8	CD	mix	F08
+F10	Rhizosphere10	CD	mix	F10
+F11	Rhizosphere11	CD	mix	F11
+F12	Rhizosphere12	CD	mix	F12
+F13	Rhizosphere13	CD	mix	F13
+F14	Rhizosphere14	CD	mix	F14
+F15	Rhizosphere15	CD	mix	F15

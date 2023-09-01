@@ -24,11 +24,6 @@ F05-2	Rajula	Collection-05	Rhizosphere	Nodulating	F05	Amreli	7.96	0.77	0.6	9	437
 F05-3	Rajula	Collection-05	Rhizosphere	Nodulating	F05	Amreli	7.9	0.76	0.57	11	443	7.4	7.48	2.74	4.82	0.76
 F05-4	Rajula	Collection-05	Rhizosphere	Nodulating	F05	Amreli	8.01	0.69	0.51	9	251	9.2	6.44	2.58	2.76	0.52
 F05-5	Rajula	Collection-05	Rhizosphere	Nodulating	F05	Amreli	8.11	0.75	0.48	9	190	8.7	6.34	2.58	2.42	0.52
-F06-1	Una	Collection-06	Rhizosphere	Nodulating	F06	Gir Somnath	7.85	0.58	0.58	8	247	8.1	5.28	1.42	2.2	0.52
-F06-2	Una	Collection-06	Rhizosphere	Nodulating	F06	Gir Somnath	7.76	0.53	0.5	8	152	7.4	5.67	1.22	2.54	0.48
-F06-3	Una	Collection-06	Rhizosphere	Nodulating	F06	Gir Somnath	7.75	0.45	0.56	7	143	8.5	5.32	1.2	2.32	0.42
-F06-4	Una	Collection-06	Rhizosphere	Nodulating	F06	Gir Somnath	7.73	0.49	0.61	10	156	8.3	3.4	0.78	1.16	0.28
-F06-5	Una	Collection-06	Rhizosphere	Nodulating	F06	Gir Somnath	7.81	0.53	0.77	10	138	7.8	5.72	1.08	2.24	0.38
 F07-1	Piperllage	Collection-07	Rhizosphere	Nodulating	F07	Amreli	7.65	0.59	0.5	9	352	9.7	8.08	1.1	3.74	0.32
 F07-2	Piperllage	Collection-07	Rhizosphere	Nodulating	F07	Amreli	7.58	0.72	0.42	9	333	9.5	6.04	0.96	3.86	0.28
 F07-3	Piperllage	Collection-07	Rhizosphere	Nodulating	F07	Amreli	7.61	0.64	0.49	10	478	8.5	5.32	0.92	3.1	0.28
@@ -39,11 +34,6 @@ F08-2	Kodinar	Collection-08	Rhizosphere	Nodulating	F08	Gir Somnath	7.65	0.54	0.5
 F08-3	Kodinar	Collection-08	Rhizosphere	Nodulating	F08	Gir Somnath	7.75	0.49	0.54	8	156	9.2	4.9	0.94	3.1	0.28
 F08-4	Kodinar	Collection-08	Rhizosphere	Nodulating	F08	Gir Somnath	7.76	0.5	0.59	8	180	9	5.1	0.92	3.1	0.28
 F08-5	Kodinar	Collection-08	Rhizosphere	Nodulating	F08	Gir Somnath	7.76	0.48	0.52	9	143	8.5	4.98	0.92	3.2	0.3
-F09-1	Jhunjharpar	Collection-09	Rhizosphere	Nodulating	F09	Junagadh	7.83	0.36	0.47	9	112	8.3	5.36	0.8	2.62	0.2
-F09-2	Jhunjharpar	Collection-09	Rhizosphere	Nodulating	F09	Junagadh	7.88	0.41	0.53	8	112	8	5.48	0.78	2.52	0.22
-F09-3	Jhunjharpar	Collection-09	Rhizosphere	Nodulating	F09	Junagadh	7.73	0.43	0.68	7	190	9.5	6.98	0.96	2.94	0.24
-F09-4	Jhunjharpar	Collection-09	Rhizosphere	Nodulating	F09	Junagadh	7.97	0.47	0.56	9	195	7.8	8.08	1.34	3.62	0.2
-F09-5	Jhunjharpar	Collection-09	Rhizosphere	Nodulating	F09	Junagadh	7.76	0.37	0.52	8	143	9	6.66	0.94	2.92	0.2
 F10-1	Khorasa Gir	Collection-10	Rhizosphere	Nodulating	F10	Gir Somnath	7.74	0.51	0.58	9	96	8.1	5.24	0.52	1.86	0.22
 F10-2	Khorasa Gir	Collection-10	Rhizosphere	Nodulating	F10	Gir Somnath	7.6	0.37	0.51	9	96	8	4.58	0.5	1.6	0.2
 F10-3	Khorasa Gir	Collection-10	Rhizosphere	Nodulating	F10	Gir Somnath	7.56	0.44	0.48	9	88	9.2	5.4	0.6	2.86	0.2

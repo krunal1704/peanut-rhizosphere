@@ -5,13 +5,13 @@ set.seed(100)
 width = 297
 height = 210
 
-path <- "E:/krunal/metagenomic data/metagenomic sequences" # CHANGE ME to the directory containing the fastq files after unzipping.
+path <- "E:/Ph.D/krunal/metagenomic data/1. Anand/Krunal/metagenomic sequences/krunal" # CHANGE ME to the directory containing the fastq files after unzipping.
 list.files(path)
 
 
 # Forward and reverse fastq filenames have format: SAMPLENAME_R1_001.fastq and SAMPLENAME_R2_001.fastq
-fnFs <- sort(list.files(path, pattern="_R1.fastq", full.names = TRUE))
-fnRs <- sort(list.files(path, pattern="_R2.fastq", full.names = TRUE))
+fnFs <- sort(list.files(path, pattern="_R1_001.fastq", full.names = TRUE))
+fnRs <- sort(list.files(path, pattern="_R2_001.fastq", full.names = TRUE))
 
 
 # Extract sample names, assuming filenames have format: SAMPLENAME_XXX.fastq
@@ -27,7 +27,7 @@ plotQualityProfile(fnFs[1:10])
 plotQualityProfile(fnRs[1:10])
 
 #trimming was done to remove 2 nucleotide in R1 and 11 in R2 reads. Further, primer sequences were removed by triming 17 in R1 and 21 in R2 reads.
-out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, maxN=0, rm.phix=TRUE, maxEE = 2, truncLen = c(249,240), trimLeft = c(17,21), compress=TRUE, multithread=FALSE)
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, maxN=0, rm.phix=TRUE, maxEE=c(3,3), truncLen = c(249,240), trimLeft = c(17,21), compress=TRUE, multithread=FALSE)
 
 plotQualityProfile(filtFs[1:10])
 plotQualityProfile(filtRs[1:10])
@@ -54,7 +54,7 @@ hist(nchar(getSequences(seqtab2)), main = "Histogram of merged read length distr
 saveRDS(seqtab2, "seqtab-run1.rds")
 
 #remove bimeras
-seqtab.nochim <- removeBimeraDenovo(seqtab2, method="consensus", multithread=TRUE, verbose=TRUE)
+seqtab.nochim <- removeBimeraDenovo(seqtab2, method="consensus", multithread=FALSE, verbose=TRUE)
 sum(seqtab.nochim)/sum(seqtab2)
 
 #track reads through steps
@@ -68,7 +68,7 @@ write.table(x = track, file = "reads-stats.txt", sep = "\t", quote = FALSE)
 saveRDS(seqtab.nochim, "16s.rds")
 save.image("16s.RData")
 
-# Assign taxonomy using GTDB v202 database
+# Assign taxonomy using GTDB120 database
 taxGTDB <- assignTaxonomy(seqtab.nochim, tryRC = TRUE, refFasta = "GTDB_bac120_arc122_ssu_r202_fullTaxo.fa", minBoot = 80)
 saveRDS(taxGTDB, "taxaGTDB.rds")
 
@@ -80,7 +80,7 @@ write.table(taxGTDB, file = "taxaGTDB120.tsv", sep = "\t")
 write.table(speciesGTDB, file = "speciesGTDB120.tsv", sep = "\t")
 
 #summaries assignments for each taxonomic levels and plot them
-GTDB120 <- apply(speciesGTDB120, 2, function(x) length(which(!is.na(x))))
+GTDB120 <- apply(speciesGTDB, 2, function(x) length(which(!is.na(x))))
 read.counts <- as.data.frame(rbind(GTDB120))
 read.counts$Database <- row.names(read.counts)
 read.counts <- reshape2::melt(data = read.counts, id = "Database")
@@ -134,18 +134,21 @@ variable = rep(farmparameter$variable, each= 1) #change variable
 Farm = rep(c(farmparameter$Name))
 value = farmparameter$variable #change variable
 data=data.frame(variable, Farm, value)
-#plot bar plot
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "pH") + ylab("pH")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.9e-07", colour = "black", y.position = 8.5, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "EC") + ylab(expression(paste("EC m", Omega,"/cm")))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.9e-06", colour = "black", y.position = 1.2, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "OC") + ylab("OC (%)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.5e-05", colour = "black", y.position = 1, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(expression(paste("P"[2],O[5]))) + ylab(expression(paste("P"[2],O[5], (Kg/Ac))))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 0.13", colour = "black", y.position = 12, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(expression(paste("K"[2],O))) + ylab(expression(paste("K"[2],O (Kg/Ac))))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.1e-07", colour = "black", y.position = 600, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "S") + ylab("S (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 0.68", colour = "black", y.position = 11, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Zn") + ylab("Zn (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 3.3e-07", colour = "black", y.position = 2, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Fe") + ylab("Fe (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.8e-07", colour = "black", y.position = 6, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Mn") + ylab("Mn (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.4e-06", colour = "black", y.position = 9, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Cu") + ylab("Cu (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 8.5, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.7e-07", colour = "black", y.position = 3, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
-#save plot manually
+#plot bar-plot
+pH <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "pH") + ylab("pH")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.6e-06", colour = "black", y.position = 8.5, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+EC <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "EC") + ylab(expression(paste("EC m", Omega,"/cm")))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.5e-05", colour = "black", y.position = 1.2, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+OC <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "OC") + ylab("OC (%)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 3e-05", colour = "black", y.position = 1, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+P2O5 <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(expression(paste("P"[2],O[5]))) + ylab(expression(paste("P"[2],O[5], (Kg/Ac))))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 0.11", colour = "black", y.position = 12, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+K2O <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(expression(paste("K"[2],O))) + ylab(expression(paste("K"[2],O (Kg/Ac))))+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"),axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.0e-07", colour = "black", y.position = 600, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+S <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "S") + ylab("S (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 0.75", colour = "black", y.position = 11, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+Zn <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Zn") + ylab("Zn (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.5e-06", colour = "black", y.position = 2, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+Fe <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Fe") + ylab("Fe (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.8e-07", colour = "black", y.position = 6, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+Mn <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Mn") + ylab("Mn (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 1.3e-06", colour = "black", y.position = 9, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+Cu <- ggplot(data, aes(x=Farm, colour = sample.data$Farm, y=value, fill=variable)) + geom_bar(stat="identity", fill="white", position=position_dodge()) + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ggtitle(label = "Cu") + ylab("Cu (ppm)")+ theme(plot.title = element_text(size = 15, face = "bold"), axis.text.x = element_text(size = 10, face = "bold"), axis.text.y = element_text(size = 14, face = "bold"), axis.title.y = element_text(size = 20, face = "bold"), axis.title.x = element_text(size = 20, face = "bold")) + guides(fill="none") + geom_bracket(data = data, label = "Kruskal-Wallis, p - 2.6e-06", colour = "black", y.position = 3, xmin = "F03-1", xmax = "F03-1", label.size = 6) + scale_color_manual(values = color.beta) + labs(colour = "Farm")
+
+pc <- ggarrange(pH, EC, OC, P2O5, K2O, S, Zn, Fe, Mn, Cu, nrow = 5, ncol = 2)
+ggsave(filename = "Physico-chemical propeties of soil.pdf", plot = pc, device = "pdf", width = height * 3.5, height = width * 2.5, units = "mm")
+
 
 #PCA plot of soil property
 soil.pca <- prcomp(sample.data[, c(8:17)], center = TRUE, scale. = TRUE)
@@ -197,6 +200,9 @@ metadata$ObservedASV = div$observed
 compare_means(formula = ObservedASV ~ Farm, data = metadata, method = "wilcox.test", p.adjust.method = "BH")
 compare_means(formula = ShannonDiversity ~ Farm, data = metadata, method = "wilcox.test", p.adjust.method = "BH")
 
+color.beta <- rev(c(brewer.pal(n = 12, name = "Paired"), "gray28", "blue3", "deeppink3"))
+color.beta[5] <- "yellow3"
+
 ggplot(data = metadata, mapping = aes(x = Farm, y = ObservedASV, color = District)) + geom_boxplot() + stat_compare_means(method = "kruskal.test", label.y = 2000, label.x = 1)
 ggplot(data = metadata, mapping = aes(x = Farm, y = ShannonDiversity, color = District)) + geom_boxplot() + stat_compare_means(method = "kruskal.test", label.y = 7, label.x = 1)
 alphaObserved <- ggplot(data = metadata, mapping = aes(x = Farm, y = ObservedASV, color = District)) + geom_boxplot() + stat_compare_means(method = "kruskal.test", label.y = 2000, label.x = 1) + scale_color_manual(values = color.beta)
@@ -204,6 +210,7 @@ alphaShannon <- ggplot(data = metadata, mapping = aes(x = Farm, y = ShannonDiver
 palpha <- ggarrange(alphaObserved, alphaShannon, ncol = 1, align = "hv")
 palpha
 ggsave(filename = "alpha-plot.pdf", plot = palpha, device = "pdf", width = width*1.25, height = height*1.25, units = "mm")
+
 
 ########plotting taxonomy
 #####PHYLUM
@@ -220,6 +227,7 @@ ps2.Phylum.rel.df[, mean := mean(Abundance, na.rm = TRUE), by = "OTU"]
 phylum.type <- ggpubr::compare_means(formula = Abundance ~ Farm, data = ps2.Phylum.rel.df[ps2.Phylum.rel.df$mean > 0.0001,], method = "kruskal.test", p.adjust.method = "BH", group.by = "OTU")
 phylum.type.wilcox <- ggpubr::compare_means(formula = Abundance ~ Farm, data = ps2.Phylum.rel.df, method = "wilcox.test", p.adjust.method = "BH", group.by = "OTU")
 
+write.table(x = phylum.type, file = "phylum-type.txt", quote = FALSE, sep = "\t", row.names = FALSE, col.names = TRUE)
 
 # Change name of taxa less than 1%
 ps2.Phylum.rel.df[(mean <= 0.01), OTU := "Less Abundant Phyla"]
@@ -227,11 +235,12 @@ ps2.Phylum.rel.df[(mean <= 0.01), OTU := "Less Abundant Phyla"]
 ps2.Phylum.rel.df <- ps2.Phylum.rel.df[, sum(Abundance), by = list(OTU,Sample,Description,Farm)]
 colnames(ps2.Phylum.rel.df)[5] <- "Abundance"
 #plot box plot
-Rhizo.Phylum.box <- ggplot(ps2.Phylum.rel.df, aes(x=OTU, y=Abundance*100, fill = factor(Farm, levels=c("F01","F02","F03","F04","F05","F06","F07","F08","F09","F10","F11","F12","F13","F14","F15")))) + geom_point(position=position_dodge(width=0.75), show.legend = FALSE, size=1) + geom_boxplot(alpha = 0.7) + scale_y_log10() + theme(legend.position = "left") + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Phylum") + xlab("") + theme(plot.margin=unit(c(1,0.25,0.25,0.25), "cm")) + labs(fill = "Farm")
+Rhizo.Phylum.box <- ggplot(ps2.Phylum.rel.df, aes(x=OTU, y=Abundance*100, fill = factor(Farm))) + geom_point(position=position_dodge(width=0.75), show.legend = FALSE, size=1) + geom_boxplot(alpha = 0.7) + scale_y_log10() + theme(legend.position = "left") + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Phylum") + xlab("") + theme(axis.text.x = element_text(size = 10), plot.margin=unit(c(1,0.25,0.25,0.25), "cm")) + labs(fill = "Farm")
+ggsave(filename = "Rhizo-phylum.jpeg", plot = Rhizo.Phylum.box, device = "jpeg", width = width*1.25, height = height*1, units = "mm")
 #get color codes, store in object and remember to not run that code again or different colors everytime
 colcodes.phylum <- distinctColorPalette(length(unique(ps2.Phylum.rel.df$OTU))+13)
 #plotting stacked bar chart
-Phylum.bar <- ggplot(data=ps2.Phylum.rel.df, aes(x=Sample, y=Abundance*100, fill=OTU)) + geom_bar(position="stack", stat="identity", color = "black", size = 0.05, width = 1)  + xlab("Samples") + ylab("Relative abundance of Phyla")   + scale_fill_manual(values = colcodes.phylum) + labs(fill = "Phylum") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + coord_cartesian(expand = FALSE ) + guides(fill=guide_legend(ncol=1)) + scale_y_continuous(breaks = c(seq(from = 0, to = 100, by = 5)))
+Phylum.bar <- ggplot(data=ps2.Phylum.rel.df, aes(x=Sample, y=Abundance*100, fill=OTU)) + geom_bar(position="stack", stat="identity", color = "black", size = 0.05, width = 1)  + xlab("Samples") + ylab("Relative abundance of Phyla")   + scale_fill_manual(values = colcodes.phylum) + labs(tag = "A", fill = "Phylum") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + coord_cartesian(expand = FALSE ) + guides(fill=guide_legend(ncol=1)) + scale_y_continuous(breaks = c(seq(from = 0, to = 100, by = 5)))
 ggsave(filename = "Phylum-bar-plot.pdf", plot = Phylum.bar, device = "pdf", width = width, height = height, units = "mm")
 ##
 
@@ -261,25 +270,28 @@ write.table(x = genus.type.wilcox, file = "genus-type-wilcoxon.txt", quote = FAL
 
 
 ps2Genus.df = ps2.Genus.rel.df
-# #group df by taxa and calculate mean rel. abundance and maximum abundance per genus
+##group df by taxa and calculate mean rel. abundance and maximum abundance per genus
 ps2.Genus.rel.df[, mean := ((mean(Abundance, na.rm = TRUE))), by = "Genus"]
 #ps2.Genus.rel.df[, maximum := max(Abundance[Abundance > 0], na.rm = TRUE), by = "Genus"]
 
-#To get a better picture, mean > 0.01(1%) was considered. Further, considering the highly varying range of each genera, additional condition with maximum abundance of genera > 0.05(5%) was also considered. 
+#To get a better picture, mean > 0.01(1%) was considered.
 #Those not meeting these criteria were renamed as Lesser abundant genera
-ps2.Genus.rel.df[(mean < 0.01), Genus := " Less Abundant Genera (n=673)"]
+ps2.Genus.rel.df[(mean < 0.01), Genus := " Less Abundant Genera (n=645)"]
 #Creating df with summarized lesser abundant taxa abundance
 ps2.Genus.rel.df <- ps2.Genus.rel.df[, sum(Abundance), by = list(Genus,Sample,Description,Farm)]
 colnames(ps2.Genus.rel.df)[5] <- "Abundance"
 # #plot box plot
-Rhizo.Genus.box <- ggplot(ps2.Genus.rel.df[Genus != " Less Abundant Genera (n=673)"], aes(x=Genus, y=Abundance*100, fill = factor(Farm, levels=c("F01","F02","F03","F04","F05", "F06", "F07", "F08", "F09", "F10", "F11", "F12", "F13", "F14", "F15")))) + geom_point(position=position_dodge(width=0.75), show.legend = FALSE, size = 1) + geom_boxplot(alpha = 0.7) + scale_y_log10() + theme(legend.position = "left", axis.text.x = element_text(size = 6)) + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Genus") + xlab("") + theme(plot.margin=unit(c(1,0.25,0.25,0.5), "cm")) + labs(fill = "Farm")
+Rhizo.Genus.box <- ggplot(ps2.Genus.rel.df[Genus != " Less Abundant Genera (n=645)"], aes(x=Genus, y=Abundance*100, fill = factor(Farm))) + geom_point(position=position_dodge(width=0.75), show.legend = FALSE, size = 1) + geom_boxplot(alpha = 0.7) + scale_y_log10() + theme(legend.position = "left", axis.text.x = element_text(size = 7, face = "bold")) + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Genus") + xlab("") + theme(plot.margin=unit(c(1,0.25,0.25,0.5), "cm")) + labs(fill = "Farm")
+ggsave(filename = "Rhizo.Genus.box.jpeg", plot = Rhizo.Genus.box, device = "jpeg", width = 325, height = 210, units = "mm")
 # get color codes, store in object and remember to not run that code again or different colors everytime
 colcodes.genus <- distinctColorPalette(length(unique(ps2.Genus.rel.df$Genus))+7)
 #plotting stacked bar chart
-Genus.bar <- ggplot(data=ps2.Genus.rel.df, aes(x=Sample, y=Abundance*100, fill=Genus)) + geom_bar(position="stack", stat="identity", color = "black", size=0.05, width = 1)  + xlab("Samples") + ylab("Relative abundance of Genera")   + scale_fill_manual(values = colcodes.genus) + labs(fill = "Genus") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + coord_cartesian(expand = FALSE, ylim = c(0,55) ) + guides(fill=guide_legend(ncol=1)) + scale_y_continuous(breaks = c(seq(from = 0, to = 100, by = 5)))
+Genus.bar <- ggplot(data=ps2.Genus.rel.df, aes(x=Sample, y=Abundance*100, fill=Genus)) + geom_bar(position="stack", stat="identity", color = "black", size=0.05, width = 1)  + xlab("Samples") + ylab("Relative abundance of Genera")   + scale_fill_manual(values = colcodes.genus) + labs(tag = "B", fill = "Genus") + theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) + coord_cartesian(expand = FALSE, ylim = c(0,55) ) + guides(fill=guide_legend(ncol=1)) + scale_y_continuous(breaks = c(seq(from = 0, to = 100, by = 5)))
 Genus.bar
 ggsave(filename = "Genus-bar-plot.pdf", plot = Genus.bar, device = "pdf",dpi = 300, width = width, height = height, units = "mm")
 
+taxo <- ggarrange(Phylum.bar, Genus.bar, ncol = 1, align = "hv")
+ggsave(filename = "taxo.pdf", plot = taxo, device = "pdf", width = 250*1.25, height = 210*1.25, units = "mm")
 
 
 #SPECIES & ASV
@@ -359,6 +371,7 @@ for (i in 1:length(variables))
 ps2.ordisurf.plot.all <- ggarrange(nrow = 4, ncol = 3, plotlist = ps2.ordisurf.plot)
 ggsave(filename = "beta-plot-ordisurf.pdf", plot = ps2.ordisurf.plot.all, device = "pdf", width = height * 2.2, height = width * 2.5, units = "mm")
 
+
 #pairwise adonis for bray-curtis distance
 pairwise.adonis.bray <- pairwise.adonis(x = ps2.bray.dist, factors = metadata$Farm)
 #modify dataframe to be upper matrix
@@ -398,15 +411,15 @@ rownames(Rhizo.genus.corr) <- Rhizo.genus.corr$Sample
 Rhizo.genus.corr <- Rhizo.genus.corr[,-1]
 res <- cor(Rhizo.genus.corr)
 res2<- Hmisc::rcorr(as.matrix(Rhizo.genus.corr))
-pdf(file = "Rhizosphere-genus-0.001-correlation.pdf", width = height/15, height = width/15)
-corrplot(res2$r, p.mat = res2$P, sig.level = 0.05, insig = "blank", tl.col="black", tl.cex = 0.5, order = "hclust", method = "square", addrect = 6)
+pdf(file = "Rhizosphere-genus-0.001-correlation.pdf", width = height*25, height = width*15)
+corrplot(res2$r, p.mat = res2$P, sig.level = 0.05, insig = "blank", tl.col="black", tl.cex = 0.5, order = "hclust", method = "square", addrect = 7)
 dev.off()
 
 ############______############
 
 
 #for cd approch
-path2 <- "E:/Ph.D/krunal/metagenomic data/culture depended sequences" # CHANGE ME to the directory containing the fastq files after unzipping.
+path2 <- "E:/Ph.D/krunal/metagenomic data/1. Anand/Krunal/culture depended sequences/culture all media data"
 list.files(path2)
 
 fnFs2 <- sort(list.files(path2, pattern="_R1_001.fastq", full.names = TRUE))
@@ -448,7 +461,7 @@ hist(nchar(getSequences(seqtab2.2)), main = "Histogram of merged read length dis
 
 saveRDS(seqtab2.2, "seqtab-run2.rds")
 
-# for comparative analysis both runs, CI (seqtab-run1) and CD (seqtab-run2) were merge
+# for comparitive analysis both runs, CI (seqtab-run1) and CD (seqtab-run2) were merge
 seqtab2 <- readRDS("seqtab-run1.rds")
 seqtab2.2 <- readRDS("seqtab-run2.rds")
 st.all <- mergeSequenceTables(seqtab2, seqtab2.2)
@@ -483,7 +496,7 @@ saveRDS(object = ps3, file = "ps3.RDS")
 sort(sample_sums(ps3))
 table(taxa_sums(ps3))
 
-#removing samples with read counts less than 9,500 (except F10-1,4 and F04-2). This will be the final object analysed throughout.but sample F10-1 retain 
+#removing samples with read counts less than 10,000 (except F10-1,4 and F04-2). This will be the final object analysed throughout.but sample F10-1 retain 
 ps4 <- prune_samples(sample_sums(ps3) > 9500, ps3)
 ps4
 saveRDS(object = ps4, file = "ps4.RDS")
@@ -501,7 +514,7 @@ ggsave(filename = "rarefactionplotall.pdf", plot = rarefaction.plot.all, device 
 
 #######Alpha diversity
 #plot
-alpha <- plot_richness(ps5, measures = c("Observed", "Shannon"), x = "Type", color = "Farm") + xlab("Media")
+alpha <- plot_richness(ps5, measures = c("Observed", "Shannon"), x = "Type", color = "Farm") + xlab("Approach")
 #save
 ggsave(filename = "alpha-plot.pdf", plot = alpha, device = "pdf", width = width, height = height, units = "mm")
 
@@ -531,7 +544,7 @@ colnames(all) <- c("Phylum", "All samples")
 all$Phylum[is.na(all$Phylum)] <- "Unclassified phylum"
 colnames(cd) <- c("Phylum", "CD samples")
 ASV.count <- gather(data = merge(x = all, y = cd, all.x = TRUE), key = "Samples", value = "Frequency", -Phylum)
-count.plot <- ggplot(data=ASV.count, aes(x = Phylum, y = Frequency*10, fill = Samples)) +   geom_bar(stat="identity", position=position_dodge()) + scale_y_log10(labels=function(x)x/10) + annotation_logticks(sides = "l") + theme(axis.text.x = element_text(angle = 45, size = 11, hjust = 0.8)) + theme(legend.position = c(0.5, 0.9), legend.background = element_rect(fill = NA), legend.direction = "horizontal") + geom_text(aes(label=Frequency), vjust=0, color="blue", position = position_dodge(0.9), size=3.5) + scale_fill_manual(values=c('#999999','#E69F00')) + labs(x = "Phyla", y = "Count of unique ASVs")
+count.plot <- ggplot(data=ASV.count, aes(x = Phylum, y = Frequency*10, fill = Samples)) +   geom_bar(stat="identity", position=position_dodge()) + scale_y_log10(labels=function(x)x/10) + annotation_logticks(sides = "l") + theme(axis.text.x = element_text(angle = 45, size = 11, hjust = 0.8)) + theme(legend.position = c(0.5, 0.9), legend.background = element_rect(fill = NA), legend.direction = "horizontal") + geom_text(aes(label=Frequency), vjust=0, color="blue", position = position_dodge(0.9), size=3.8) + scale_fill_manual(values=c('#999999','#E69F00')) + labs(tag = "A", x = "Phyla", y = "Count of unique ASVs")
 #count.plot <- ggplot(data=ASV.count, aes(x = Phylum, y = Frequency*10, fill = Samples)) +   geom_bar(stat="identity", position=position_dodge()) + scale_y_log10(labels=function(x)x/10) + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + theme(legend.position = c(0.5, 0.9), legend.background = element_rect(fill = NA), legend.direction = "horizontal") + geom_text(aes(label=Frequency), vjust=1.6, color="white", position = position_dodge(0.9), size=3.5) + scale_fill_manual(values=c('#999999','#E69F00')) + labs(x = "Phyla", y = "Count of unique ASVs")
 #count.plot <- ggplot(data=ASV.count, aes(x = Phylum, y = Frequency*10, fill = Samples)) +   geom_bar(stat="identity", position=position_dodge()) + scale_y_log10(labels=function(x)x/10) + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 3 == 1, '', ifelse(i %% 3 == 2,'\n','\n\n' )), labels[i]))}) + theme(legend.position = c(0.5, 0.9), legend.background = element_rect(fill = NA), legend.direction = "horizontal") + geom_text(aes(label=Frequency), vjust=1.6, color="white", position = position_dodge(0.9), size=3.5) + scale_fill_manual(values=c('#999999','#E69F00')) + labs(x = "Phyla", y = "Count of unique ASVs")
 ggsave(filename = "ASV-count.pdf", plot = count.plot, device = "pdf", width = height*1.6, height = width, units = "mm")
@@ -547,10 +560,12 @@ taxa_names(ps5.Phylum.rel)[is.na(taxa_names(ps5.Phylum.rel))] <- "Unclassified P
 TopPhyla <- names(sort(taxa_sums(ps5.Phylum.rel), TRUE)[1:15])
 psdf <- data.table(psmelt(prune_taxa(TopPhyla, ps5.Phylum.rel)))
 colcodes.phylum <- distinctColorPalette(length(unique(psdf$OTU))+5) #commented to avoid selecting new colors everytime
-Phylum.box <- ggplot(psdf, aes(x=OTU, y=Abundance*100, fill = Type))  + geom_boxplot(position = position_dodge(preserve = "single"), size = 0.2) + scale_fill_manual(values = colcodes.phylum) + scale_y_log10() + theme(legend.position = "left") + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Phylum") + xlab("Phyla") + theme(plot.margin=unit(c(1,0.25,0.25,0.75), "cm"), axis.text.x = element_text(size=10)) + labs(fill = "Media") + geom_vline(xintercept = seq(1.5, 14.5, by = 1))
+Phylum.box <- ggplot(psdf, aes(x=OTU, y=Abundance*100, fill = Type))  + geom_boxplot(position = position_dodge(preserve = "single"), size = 0.2) + scale_fill_manual(values = colcodes.phylum) + scale_y_log10() + theme(legend.position = "right") + annotation_logticks(sides = "l") + scale_x_discrete(labels = function(labels) {sapply(seq_along(labels), function(i) paste0(ifelse(i %% 2 == 0, '', '\n\n'), labels[i]))}) + ylab("Relative abundance of Phylum") + xlab("Phyla") + theme(plot.margin=unit(c(1,0.25,0.25,0.75), "cm"), axis.text.x = element_text(size=10)) + labs(tag = "B", fill = "Media") + geom_vline(xintercept = seq(1.5, 14.5, by = 1))
 Phylum.box
 ggsave(filename = "Phylum-box-plot.pdf", plot = Phylum.box, device = "pdf", width = height, height = width/2, units = "mm")
 
+count.phyla <- ggarrange(count.plot, Phylum.box, ncol = 1, align = "hv")
+ggsave(filename = "count-phyla.jpeg", plot = count.phyla, device = "jpeg", width = 250*1.25, height = 210*1.25, units = "mm")
 
 ######## Converting to binary(presence-absence)
 ps5.binary <- transform_sample_counts(ps5, function(x) ifelse(x>0,1,0))
@@ -590,7 +605,7 @@ names.taxa <- taxa_names(ps5.binary)
 names.taxa <- names.taxa[!names.taxa %in% binary.table.CD$Row.names]
 taxa.name.order <- c(binary.table.CD$Row.names, names.taxa)
 #plot heatmap
-ASV.pa.heatmap <- plot_heatmap(ps5.binary, method = NULL, trans = NULL, sample.order = metadata2$Name, taxa.order = rev(taxa.name.order), max.label = 6000, low = "white", na.value = "white", high = "#000033") + xlab("Samples") + ylab("ASVs")
+ASV.pa.heatmap <- plot_heatmap(ps5.binary, method = NULL, trans = NULL, sample.order = metadata$Name, taxa.order = rev(taxa.name.order), max.label = 6000, low = "white", na.value = "white", high = "#000033") + xlab("Samples") + ylab("ASVs")
 ggsave(filename = "ASV-pa-heatmap.pdf", plot = ASV.pa.heatmap, device = "pdf", width = width, height = height, units = "mm")
 
 
@@ -622,6 +637,7 @@ genus.CI <- as.character(genus.binary.table[genus.binary.table$CI > 0, "Row.name
 
 upset(fromList(list(genus.CD = genus.CD, genus.CI = genus.CI)))
 #save plot manually
+
 
 #extract CD exclusive genera for observation and checking media-wise detection
 genus.binary.table.CD <- genus.binary.table[genus.binary.table$CI == 0,]
